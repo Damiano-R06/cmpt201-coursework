@@ -29,10 +29,9 @@ int main() {
       execl(buffer, buffer, NULL);
       printf("Exec failure\n");
       exit(EXIT_FAILURE);
+
     } else {
       waitpid(pid, NULL, 0);
-
-      printf("You typed: %s \n", buffer);
     }
   }
 
