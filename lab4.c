@@ -11,6 +11,14 @@ struct header {
   struct header *next;
 };
 
+void print_out(char *format, void *data, size_t data_size) {
+  char buf[BLOCK_SIZE];
+  ssize_t len = snprintf(buf, BLOCK_SIZE, format,
+                         data_size == sizeof(uint64_t) ? *(uint64_t *)data : *(void **)data);
+
+  write(STDOUT_FILENO, buf, len);
+}
+
 int main(void) {
   void *heap = sbrk(HEAP_INCREASE); // gives address of old break
 
@@ -30,18 +38,18 @@ int main(void) {
   memset(first_data, 0, data_size);
   memset(second_data, 1, data_size);
 
-  printf("first block:        %p\n", (void *)first);
-  printf("second block:       %p\n", (void *)second);
-  printf("first block size:   %d\n", (int)first->size);
-  printf("first block next:   %p\n", (void *)first->next);
-  printf("second block size:  %d\n", (int)second->size);
-  printf("second block next:  %p\n", (void *)second->next);
+  print_out("first block:        %p\n", &first, sizeof(&first));
+  print_out("second block:       %p\n", &second, sizeof(&second));
+  print_out("first block size:   %d\n", &first->size, sizeof(&first->size));
+  print_out("first block next:   %p\n", &first->next, sizeof(&first->next));
+  print_out("second block size:  %d\n", &second->size, sizeof(&second->size));
+  print_out("second block next:  %p\n", &second->next, sizeof(&second->next));
 
   for (size_t i = 0; i < data_size; i++) {
-    printf("%d\n", first_data[i]);
+    print_out("%hhu\n", &first_data[i], sizeof(&first_data[i]));
   }
 
   for (size_t i = 0; i < data_size; i++) {
-    printf("%d\n", second_data[i]);
+    print_out("%hhu\n", &second_data[i], sizeof(&second_data[i]));
   }
 }
