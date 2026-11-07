@@ -90,13 +90,23 @@ void groupByKey(IntermediateInput *input, Output *output, int *result_count) {
       return;
     }
   }
-  // TODO:
-  // Group entries
-  // If the doubled value exists in the output entries, add it to the output's line_numbers list
-  // If it doesn't exist, add a new entry to the output
+
+  output[*result_count].doubled_value = doubled_val;
+  output[*result_count].line_numbers[0] = line_number;
+  output[*result_count].count = 1;
+  (*result_count)++;
 }
 
 void reduce(Output *output) {
-  // TODO:
-  // Print the doubled number and line numbers
+  int doubled_val = output->doubled_value;
+  int count = output->count;
+
+  printf("(%d, [", doubled_val);
+  for (int i = 0; i < count; i++) {
+    printf("%d", output->line_numbers[i]);
+    if (i < count - 1) {
+      printf(", ");
+    }
+  }
+  printf("])\n");
 }
